@@ -13,7 +13,6 @@ final class OYMemoryCache {
     
     private let queue = DispatchQueue(label: "com.oystore.cache.queue", attributes: .concurrent)
 
-
     /// Private CacheStore
     private class CacheStore: NSObject {
         let object: Any?

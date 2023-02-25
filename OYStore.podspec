@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version                   = "1.0"
   s.summary                   = "Save persistent data or file in UserDefaults, Keychain, File System, Memory Cache."
 
-  s.homepage                  = "github.com/osmanyildirim"
+  s.homepage                  = "https://github.com/osmanyildirim/OYStore.git"
   s.license                   = { :type => "MIT", :file => "LICENSE" }
   s.author                    = { "osmanyildirim" => "github.com/osmanyildirim" }
 
