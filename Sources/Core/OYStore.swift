@@ -28,34 +28,49 @@ public final class OYStore {
             try OYFileManager().save(to: to, value: value)
         }
     }
+
+    /// Save Codable value to location (for URLCache)
+    /// - Parameter to: location to save the Codable value in
+    @available(iOS 13.0, *) public static func save(to: Location) throws {
+        switch to {
+        case .urlCache(let urlRequest, let data, let urlSession, let urlResponse):
+            try OYURLCache().save(urlRequest: urlRequest, data: data, urlSession: urlSession, urlResponse: urlResponse)
+        default: return
+        }
+    }
     
     /// Get Codable value from location
     /// - Parameter of: location to get Codable value
     /// - Returns: Codable value
-    /// - Throws: error if there were any issues to get value from location
-    public static func value<T: Codable>(of: Location) throws -> T {
+    public static func value<T: Codable>(of: Location) -> T? {
         switch of {
         case .userDefaults(let key):
-            guard let data: T = try OYUserDefaults().value(key: key) else {
-                throw OYError.valueCouldNotRetrieve
+            guard let data: T = try? OYUserDefaults().value(key: key) else {
+                return nil
             }
             return data
 
         case .keychain(let key):
-            guard let data: T = try OYKeychain().value(key: key) else {
-                throw OYError.valueCouldNotRetrieve
+            guard let data: T = try? OYKeychain().value(key: key) else {
+                return nil
             }
             return data
 
         case .memoryCache(let key):
-            guard let data: T = try OYMemoryCache().value(key: key) else {
-                throw OYError.valueCouldNotRetrieve
+            guard let data: T = try? OYMemoryCache().value(key: key) else {
+                return nil
+            }
+            return data
+            
+        case .urlCache(let urlRequest, _, _, _):
+            guard let data: T = try? OYURLCache().value(urlRequest: urlRequest) else {
+                return nil
             }
             return data
 
         default:
-            guard let data: T = try OYFileManager().value(of: of) else {
-                throw OYError.valueCouldNotRetrieve
+            guard let data: T = try? OYFileManager().value(of: of) else {
+                return nil
             }
             return data
         }
@@ -67,11 +82,11 @@ public final class OYStore {
     ///   - default: default value for location with key
     /// - Returns: Codable value
     public static func value<T: Codable>(of: Location, default: T) -> T {
-        return (try? value(of: of)) ?? `default`
+        return value(of: of) ?? `default`
     }
     
-    /// Delete value by location with key
-    /// - Parameter of: location where the value will be deleted with the key
+    /// Remove value by location with key
+    /// - Parameter of: location where the value will be removed with the key
     /// - Throws: error if there were any issues to remove value from location
     public static func remove(of: Location) throws {
         switch of {
@@ -83,6 +98,9 @@ public final class OYStore {
 
         case .memoryCache(let key):
             OYMemoryCache().remove(keys: key)
+            
+        case .urlCache(let urlRequest, _, _, _):
+            OYURLCache().remove(urlRequest: urlRequest)
 
         default:
             try OYFileManager().remove(of: of)
@@ -102,6 +120,9 @@ public final class OYStore {
             
         case .memoryCache:
             OYMemoryCache().removeAll()
+            
+        case .urlCache:
+            OYURLCache().removeAll()
             
         default:
             try OYFileManager().removeAll(of: of)

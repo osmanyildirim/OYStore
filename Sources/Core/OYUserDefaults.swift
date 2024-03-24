@@ -41,7 +41,7 @@ final class OYUserDefaults {
         }
     }
 
-    /// Delete value by keys from UserDefaults
+    /// Remove value by keys from UserDefaults
     /// - Parameter keys: keys of values to remove
     func remove(keys: String...) {
         keys.forEach({ userDefaults?.removeObject(forKey: $0) })

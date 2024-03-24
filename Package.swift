@@ -9,5 +9,4 @@ let package = Package(
     ],
     targets: [
         .target(name: "OYStore", path: "Sources")
-    ]
-)
+    ])

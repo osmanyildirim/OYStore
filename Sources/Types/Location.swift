@@ -17,6 +17,9 @@ public enum Location {
     /// NSCache
     case memoryCache(key: String)
     
+    /// URLCache
+    case urlCache(urlRequest: URLRequest, data: Data? = nil, urlSession: URLSession? = nil, urlResponse: URLResponse? = nil)
+    
     /// `/Library/Caches` Directory
     case diskCache(file: String, type: FileType)
     

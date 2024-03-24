@@ -74,7 +74,7 @@ final class OYKeychain {
         }
     }
     
-    /// Delete value by keys from Keychain
+    /// Remove value by keys from Keychain
     /// - Parameter keys: keys of value to remove
     func remove(key: String) {
         let query = [kSecAttrService: serviceName,

@@ -61,7 +61,7 @@ final class OYMemoryCache {
         }
     }
     
-    /// Delete value by keys from MemoryCache
+    /// Remove value by keys from MemoryCache
     /// - Parameter keys: keys of values to remove
     func remove(keys: String...) {
         queue.sync(flags: .barrier, execute: {

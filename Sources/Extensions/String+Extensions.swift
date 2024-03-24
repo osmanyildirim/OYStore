@@ -36,7 +36,7 @@ extension String {
 }
 
 extension String {
-    /// If file name starts with slash(/) character, the begining slash character is deleted
+    /// If file name starts with slash(/) character, the begining slash character is removed
     /// e.g: `/folder/sample.txt` → `folder/sample.txt`
     private func clearPrefixSlashes(of string: String) -> String {
         var string = string
