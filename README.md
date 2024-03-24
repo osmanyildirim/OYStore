@@ -25,6 +25,7 @@ Store persistent data or file in **UserDefaults**, **Keychain**, **File System**
     - [UserDefaults](#userdefaults)
     - [Keychain](#keychain)
     - [Memory Cache](#memory-cache)
+    - [URL Cache](#url-cache)
     - [Disk Cache](#disk-cache)
     - [Application Support](#application-support)
     - [Documents](#documents)
@@ -170,6 +171,34 @@ try OYStore.remove(of: .memoryCache(key: "mc_uiimage_value_key"))
 - Remove all value
 ```swift
 try OYStore.removeAll(of: .memoryCache)
+```
+### URL Cache
+> Cache for <code>URLRequest</code>
+
+- Cache response
+```swift
+let session = URLSession.shared
+let request = URLRequest(url: URL(string: "API_URL")!)
+
+session.dataTask(with: request) { data, response, error in
+    try? OYStore.save(to: .urlCache(urlRequest: request, data: data, urlSession: session, urlResponse: response))
+}.resume()
+```
+- Fetch cached response
+```swift
+let request = URLRequest(url: URL(string: "API_URL")!)
+let value: User = try OYStore.value(of: .urlCache(urlRequest: request))
+```
+
+- Remove cached response
+```swift
+let request = URLRequest(url: URL(string: "API_URL")!)
+OYStore.remove(of: .urlCache(urlRequest: request))
+```
+
+- Remove all cached responses
+```swift
+try? OYStore.removeAll(of: .urlCache)
 ```
 
 ### Disk Cache

@@ -18,6 +18,9 @@ public enum ClearLocation {
     /// NSCache
     case memoryCache
     
+    /// URLCache
+    case urlCache
+    
     /// `/Library/Caches` Directory
     case diskCache
     

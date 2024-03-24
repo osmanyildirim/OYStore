@@ -38,8 +38,8 @@ final class OYFileManager {
         }
     }
     
-    /// Delete value by location with key
-    /// - Parameter of: location where the value will be deleted with the key
+    /// Remove value by location with key
+    /// - Parameter of: location where the value will be removed with the key
     /// - Throws: error if there were any issues to remove value from location
     func remove(of: Location) throws {
         guard let url = try createURL(location: of) else { throw OYError.createURLError }
