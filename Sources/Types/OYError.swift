@@ -11,11 +11,41 @@ enum OYError: Error {
     /// When creating url for file to save
     case createURLError
     
-    /// The file to be save is invalid
+    /// Data to be save is invalid
     case invalidDataToSave
     
-    /// The value couldn't retrieve
-    case valueCouldNotRetrieve
+    /// Data couldn't retrieve
+    case dataCouldNotRetrieve
+    
+    /// Data doesn't exist at location
+    case dataNotExistAtLocation
+    
+    /// Location of the data to be moved is invalid
+    case invalidLocationForToMoveData
+    
+    /// UserDefaults data can't move to location
+    case dataCanNotMoveToUserDefaults
+    
+    /// Keychain data can't move to location
+    case dataCanNotMoveToKeychain
+    
+    /// Memory Cache data can't move to location
+    case dataCanNotMoveToMemoryCache
+    
+    /// URL Cache data can't move to location
+    case dataCanNotMoveToUrlCache
+    
+    /// Data can't move to UserDefaults
+    case dataCanNotMoveFromUserDefaults
+    
+    /// Data can't move to Keychain
+    case dataCanNotMoveFromKeychain
+    
+    /// Data can't move to Memory Cache
+    case dataCanNotMoveFromMemoryCache
+    
+    /// Data can't move to URL Cache
+    case dataCanNotMoveFromUrlCache
     
     /// Custom error
     static func custom(description: String?, reason: String?, suggestion: String?) -> Error {

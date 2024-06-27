@@ -12,16 +12,16 @@ extension OYFileManager {
     /// - Parameter location: location with file and type
     /// - Returns: url of the file to save, e.g. `file:///.../Documents/folder/sample.txt`
     /// - Throws: error if there were any issues creating the url
-    func createURL(location: Location) throws -> URL? {
+    func createURL(location: Location, willMakeDirectory: Bool = true) throws -> URL? {
         switch location {
         case .applicationSupport(let file, let type):
-            return try filePath(with: FileManager.applicationSupport, name: type.fileName(file))
+            return try filePath(with: FileManager.applicationSupport, name: type.fileName(file), willMakeDirectory: willMakeDirectory)
         case .diskCache(let file, let type):
-            return try filePath(with: FileManager.caches, name: type.fileName(file))
+            return try filePath(with: FileManager.caches, name: type.fileName(file), willMakeDirectory: willMakeDirectory)
         case .documents(let file, let type):
-            return try filePath(with: FileManager.documents, name: type.fileName(file))
+            return try filePath(with: FileManager.documents, name: type.fileName(file), willMakeDirectory: willMakeDirectory)
         case .temporary(let file, let type):
-            return try filePath(with: FileManager.temporary, name: type.fileName(file))
+            return try filePath(with: FileManager.temporary, name: type.fileName(file), willMakeDirectory: willMakeDirectory)
         default: return nil
         }
     }
@@ -34,24 +34,26 @@ extension OYFileManager {
     ///   - name: file name and parent folder name if declared, e.g. `folder/sample.txt`
     /// - Returns: url of the file to save, e.g. `file:///.../Caches/folder/sample.txt`
     /// - Throws: error if there were any issues generating the url of the file to save
-    private func filePath(with directory: URL?, name: String) throws -> URL? {
+    private func filePath(with directory: URL?, name: String, willMakeDirectory: Bool) throws -> URL? {
         let filePath = try name.validPath()
         let url = directory?.appendingPathComponent(filePath, isDirectory: false)
 
         guard var url = url else {
             throw OYError.custom(description: "Could not create URL for \(directory?.absoluteString.filePathLastWord ?? "")/\(filePath)",
-                reason: "Could not get access to the file system's user domain mask.",
-                suggestion: "Use a different directory.")
+                                 reason: "Could not get access to the file system's user domain mask.",
+                                 suggestion: "Use a different directory.")
         }
 
         url.check()
-        try mkdirDirectory(url)
+
+        guard willMakeDirectory else { return url }
+        try makeDirectory(url)
 
         return url
     }
     
     /// If there is no directory in the file system it will be create
-    private func mkdirDirectory(_ url: URL) throws {
+    private func makeDirectory(_ url: URL) throws {
         var isDirectory: ObjCBool = false
         let directoryPath = url.deletingLastPathComponent()
 

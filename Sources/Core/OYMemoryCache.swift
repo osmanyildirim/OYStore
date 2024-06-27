@@ -22,57 +22,73 @@ final class OYMemoryCache {
         }
     }
     
-    /// Save value with key
+    /// Save data with key
     /// - Parameters:
-    ///   - value: value to save
-    ///   - key: key of value to save
-    func save<T>(_ value: T, key: String) {
-        switch value {
+    ///   - data: data to save
+    ///   - key: key of data to save
+    func save<T>(_ data: T, key: String) {
+        switch data {
         case is Int, is Float, is Double, is Bool, is URL, is URL?:
             queue.sync(flags: .barrier, execute: {
-                Self.cache.setObject(CacheStore(object: value), forKey: key as NSString)
+                Self.cache.setObject(CacheStore(object: data), forKey: key as NSString)
             })
         default:
-            if let value = value as? Codable {
+            if let data = data as? Codable {
                 queue.sync(flags: .barrier, execute: {
-                    Self.cache.setObject(CacheStore(object: value.data), forKey: key as NSString)
+                    Self.cache.setObject(CacheStore(object: data.data), forKey: key as NSString)
                 })
             }
         }
     }
     
-    /// Get value by key
-    /// - Parameter key: key of saved value
-    /// - Returns: decodable value
-    /// - Throws: error if there were any issues to get value from MemoryCache by key
-    func value<T: Decodable>(key: String) throws -> T? {
-        var value: Any?
+    /// Get data by key
+    /// - Parameter key: key of stored data
+    /// - Returns: decodable data
+    /// - Throws: error if there were any issues to get data from MemoryCache by key
+    func data<T: Decodable>(key: String) throws -> T? {
+        guard let data = stored(of: key) else { return nil }
 
-        queue.sync {
-            value = Self.cache.object(forKey: key as NSString)?.object
-        }
-
-        guard let value else { return nil }
-
-        if let data = value as? Data {
+        if let data = data as? Data {
             return try data.decode()
         } else {
-            return value as? T
+            return data as? T
         }
     }
     
-    /// Remove value by keys from MemoryCache
-    /// - Parameter keys: keys of values to remove
+    /// Remove data by keys from MemoryCache
+    /// - Parameter keys: keys of datas to remove
     func remove(keys: String...) {
         queue.sync(flags: .barrier, execute: {
             keys.forEach({ Self.cache.removeObject(forKey: $0 as NSString) })
         })
     }
     
-    /// Remove all value in MemoryCache
+    /// Remove all data in MemoryCache
     func removeAll() {
         queue.sync(flags: .barrier, execute: {
             Self.cache.removeAllObjects()
         })
+    }
+    
+    /// Check if it is empty by with key
+    /// - Parameter key: key of stored data
+    /// - Returns: returns `true` if the data is stored at the location, otherwise returns `false`
+    func isEmpty(key: String) -> Bool {
+        stored(of: key) != nil
+    }
+}
+
+private extension OYMemoryCache {
+    /// Get stored data by key
+    /// - Parameter key: key of stored data
+    /// - Returns: stored data
+    func stored(of key: String) -> Any? {
+        var data: Any?
+
+        queue.sync {
+            data = Self.cache.object(forKey: key as NSString)?.object
+        }
+
+        return data
     }
 }

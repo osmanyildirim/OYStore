@@ -32,7 +32,7 @@ public enum Location {
     /// `tmp` Directory
     case temporary(file: String, type: FileType)
 
-    /// FileType of the location where the file will be saved
+    /// FileType of the location where the file will be stored
     /// `png, mov, html, txt` etc.
     var fileType: FileType? {
         switch self {

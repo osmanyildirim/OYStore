@@ -8,7 +8,7 @@
 import Foundation
 
 extension Encodable {
-    /// Convert Encodable to value of type Data
+    /// Convert Encodable to Data
     var data: Data? {
         try? JSONEncoder().encode(self)
     }

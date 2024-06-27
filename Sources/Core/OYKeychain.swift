@@ -11,21 +11,21 @@ final class OYKeychain {
     /// Service name for Keychain
     private let serviceName = "OYStore_Keychain"
     
-    /// Save value with key
+    /// Save data with key
     /// - Parameters:
-    ///   - value: value to save
-    ///   - key: key of value to save
-    /// - Throws: error if there were any issues to save value from Keychain by key
-    func save<T>(_ value: T, key: String) throws {
-        var data: Data?
+    ///   - data: data to save
+    ///   - key: key of data to save
+    /// - Throws: error if there were any issues to save data from Keychain by key
+    func save<T>(_ data: T, key: String) throws {
+        var valueData: Data?
         
-        if let value = value as? Codable {
-            data = value.data
-        } else if let value = value as? Data {
-            data = value
+        if let data = data as? Codable {
+            valueData = data.data
+        } else if let data = data as? Data {
+            valueData = data
         }
         
-        guard let data else {
+        guard let valueData else {
             throw OYError.invalidDataToSave
         }
         
@@ -33,7 +33,7 @@ final class OYKeychain {
                      kSecAttrService: serviceName,
                      kSecClass: kSecClassGenericPassword,
                      kSecAttrAccount: key,
-                     kSecValueData: data] as CFDictionary
+                     kSecValueData: valueData] as CFDictionary
 
         let status = SecItemAdd(query as CFDictionary, nil)
         
@@ -43,7 +43,7 @@ final class OYKeychain {
                          kSecClass: kSecClassGenericPassword,
                          kSecAttrAccount: key] as CFDictionary
 
-            let attributesToUpdate = [kSecValueData: data] as CFDictionary
+            let attributesToUpdate = [kSecValueData: valueData] as CFDictionary
 
             SecItemUpdate(query, attributesToUpdate)
         } else if status != errSecSuccess {
@@ -53,29 +53,22 @@ final class OYKeychain {
         }
     }
     
-    /// Get value by key
-    /// - Parameter key: key of saved value
-    /// - Returns: decodable value
-    /// - Throws: error if there were any issues to get value from Keychain by key
-    func value<T: Decodable>(key: String) throws -> T? {
-        let query = [kSecAttrAccessible: kSecAttrAccessibleWhenUnlocked,
-                     kSecAttrService: serviceName,
-                     kSecClass: kSecClassGenericPassword,
-                     kSecAttrAccount: key,
-                     kSecReturnData: true] as CFDictionary
+    /// Get data by key
+    /// - Parameter key: key of stored data
+    /// - Returns: decodable data
+    /// - Throws: error if there were any issues to get data from Keychain by key
+    func data<T: Decodable>(key: String) throws -> T? {
+        let result = stored(of: key)
 
-        var result: CFTypeRef?
-        SecItemCopyMatching(query as CFDictionary, &result)
-
-        if let result = result as? Data {
-            return try result.decode()
+        if let data = result as? Data {
+            return try data.decode()
         } else {
             return result as? T
         }
     }
     
-    /// Remove value by keys from Keychain
-    /// - Parameter keys: keys of value to remove
+    /// Remove data by keys from Keychain
+    /// - Parameter keys: keys of data to remove
     func remove(key: String) {
         let query = [kSecAttrService: serviceName,
                      kSecAttrAccount: key,
@@ -83,7 +76,7 @@ final class OYKeychain {
         SecItemDelete(query)
     }
     
-    /// Remove all value in Keychain
+    /// Remove all data in Keychain
     func removeAll() {
         let secItemClasses = [kSecClassGenericPassword,
                               kSecClassInternetPassword,
@@ -96,5 +89,30 @@ final class OYKeychain {
                                        kSecAttrSynchronizable as String: kSecAttrSynchronizableAny]
             SecItemDelete(query)
         }
+    }
+    
+    /// Check if it is empty by with key
+    /// - Parameter key: key of stored data
+    /// - Returns: returns `true` if the data is stored at the location, otherwise returns `false`
+    func isEmpty(key: String) -> Bool {
+        stored(of: key) != nil
+    }
+}
+
+private extension OYKeychain {
+    /// Get stored data by key
+    /// - Parameter key: key of stored data
+    /// - Returns: stored data with type `Optional<CFTypeRef>`
+    func stored(of key: String) -> CFTypeRef? {
+        let query = [kSecAttrAccessible: kSecAttrAccessibleWhenUnlocked,
+                        kSecAttrService: serviceName,
+                              kSecClass: kSecClassGenericPassword,
+                        kSecAttrAccount: key,
+                         kSecReturnData: true] as CFDictionary
+
+        var result: CFTypeRef?
+        SecItemCopyMatching(query as CFDictionary, &result)
+
+        return result
     }
 }

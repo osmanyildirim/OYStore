@@ -23,9 +23,9 @@ final class OYURLCache {
         shared.storeCachedResponse(cached, for: urlRequest)
     }
 
-    func value<T: Decodable>(urlRequest: URLRequest) throws -> T? {
+    func data<T: Decodable>(urlRequest: URLRequest) throws -> T? {
         guard let cached = shared.cachedResponse(for: urlRequest)?.data else {
-            throw OYError.valueCouldNotRetrieve
+            throw OYError.dataCouldNotRetrieve
         }
 
         guard let decoded: T? = try cached.decode() else {
@@ -35,7 +35,7 @@ final class OYURLCache {
     }
     
     /// Remove cached response of URLRequest
-    /// - Parameter urlRequest: URLRequest of cached value to remove
+    /// - Parameter urlRequest: URLRequest of cached data to remove
     func remove(urlRequest: URLRequest) {
         shared.removeCachedResponse(for: urlRequest)
     }

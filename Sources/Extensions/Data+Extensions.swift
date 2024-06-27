@@ -13,7 +13,7 @@ extension Data {
         return try JSONDecoder().decode(T.self, from: self)
     }
 
-    /// Convert Data to value of type UIImage
+    /// Convert Data to UIImage
     var toImage: UIImage? {
         UIImage(data: self)
     }

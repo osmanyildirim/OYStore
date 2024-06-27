@@ -8,26 +8,26 @@
 import Foundation
 
 final class OYFileManager {
-    /// Save value to location with key
+    /// Save data to location with key
     /// - Parameters:
-    ///   - to: location of value to save
-    ///   - value: value to save
-    /// - Throws: error if there were any issues to save value for location by key
-    func save<T>(to: Location, value: T) throws {
+    ///   - to: location of data to save
+    ///   - data: data to save
+    /// - Throws: error if there were any issues to save data for location by key
+    func save<T>(to: Location, data: T) throws {
         let url = try createURL(location: to)
 
-        if [.jpg, .png, .mov, .mp4].contains(to.fileType), let value = value as? Data, let url = url {
-            try value.write(to: url)
-        } else if let value = value as? Codable, let url = url {
-            try value.data?.write(to: url, options: .atomic)
+        if [.jpg, .png, .mov, .mp4].contains(to.fileType), let data = data as? Data, let url = url {
+            try data.write(to: url)
+        } else if let data = data as? Codable, let url = url {
+            try data.data?.write(to: url, options: .atomic)
         }
     }
     
-    /// Get Decodable value from location
-    /// - Parameter of: location to get Decodable value
-    /// - Returns: Decodable value
-    /// - Throws: error if there were any issues to get value from location
-    func value<T: Decodable>(of: Location) throws -> T? {
+    /// Get Decodable data from location
+    /// - Parameter of: location to get Decodable data
+    /// - Returns: Decodable data
+    /// - Throws: error if there were any issues to get data from location
+    func data<T: Decodable>(of: Location) throws -> T? {
         guard let url = try createURL(location: of) else { throw OYError.createURLError }
         let data = try Data(contentsOf: url)
 
@@ -38,17 +38,17 @@ final class OYFileManager {
         }
     }
     
-    /// Remove value by location with key
-    /// - Parameter of: location where the value will be removed with the key
-    /// - Throws: error if there were any issues to remove value from location
+    /// Remove data by location with key
+    /// - Parameter of: location where the data will be removed with the key
+    /// - Throws: error if there were any issues to remove data from location
     func remove(of: Location) throws {
         guard let url = try createURL(location: of) else { throw OYError.createURLError }
         try FileManager.default.removeItem(at: url)
     }
     
-    /// Remove all value in a location
-    /// - Parameter of: location where all value will be removed
-    /// - Throws: error if there were any issues to remove all value from location
+    /// Remove all data in a location
+    /// - Parameter of: location where all data will be removed
+    /// - Throws: error if there were any issues to remove all data from location
     func removeAll(of: ClearLocation) throws {
         switch of {
         case .diskCache:
@@ -63,6 +63,63 @@ final class OYFileManager {
         case .temporary:
             try FileManager.temporaryContents.forEach({ try FileManager.default.removeItem(atPath: $0) })
         default: return
+        }
+    }
+    
+    /// Check if the data at the location exists
+    /// - Parameter at: location to check if the data exists
+    /// - Returns: returns `true` if the data is stored at the location, otherwise returns `false`
+    func isExist(at: Location) -> Bool {
+        guard let relativePath = try? createURL(location: at, willMakeDirectory: false)?.relativePath else { return false }
+        return FileManager.default.fileExists(atPath: relativePath)
+    }
+    
+    /// Move data between locations
+    /// - Parameters:
+    ///   - from: location of the data
+    ///   - to: location to be moved
+    func move(from: Location, to: Location) throws {
+        switch to {
+        case .userDefaults:
+            throw OYError.dataCanNotMoveToUserDefaults
+
+        case .keychain:
+            throw OYError.dataCanNotMoveToKeychain
+
+        case .memoryCache:
+            throw OYError.dataCanNotMoveToMemoryCache
+
+        case .urlCache:
+            throw OYError.dataCanNotMoveToUrlCache
+
+        default: break
+        }
+
+        switch from {
+        case .userDefaults:
+            throw OYError.dataCanNotMoveToUserDefaults
+
+        case .keychain:
+            throw OYError.dataCanNotMoveToKeychain
+
+        case .memoryCache:
+            throw OYError.dataCanNotMoveToMemoryCache
+
+        case .urlCache:
+            throw OYError.dataCanNotMoveToUrlCache
+
+        default:
+            let fileManager = OYFileManager()
+
+            guard let fromPath = try fileManager.createURL(location: from, willMakeDirectory: false)?.relativePath, isExist(at: from) else {
+                throw OYError.dataNotExistAtLocation
+            }
+
+            guard let toPath = try fileManager.createURL(location: to, willMakeDirectory: true)?.relativePath else {
+                throw OYError.invalidLocationForToMoveData
+            }
+
+            try FileManager.default.moveItem(atPath: fromPath, toPath: toPath)
         }
     }
 }
