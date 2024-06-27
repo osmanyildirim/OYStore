@@ -1,8 +1,8 @@
 [![Cocoapods](https://img.shields.io/cocoapods/v/OYStore.svg)](https://cocoapods.org/pods/OYStore)
 [![SPM compatible](https://img.shields.io/badge/SPM-Compatible-red.svg?style=flat)](https://swift.org/package-manager/)
 [![Platforms](https://img.shields.io/badge/platforms-iOS-yellow.svg)](https://github.com/osmanyildirim/OYStore)
-[![Swift](https://img.shields.io/badge/Swift-5.7-orange.svg)](https://swift.org)
-[![Xcode](https://img.shields.io/badge/Xcode-14.2-blue.svg)](https://developer.apple.com/xcode)
+[![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
+[![Xcode](https://img.shields.io/badge/Xcode-16.0-blue.svg)](https://developer.apple.com/xcode)
 [![MIT](https://img.shields.io/badge/License-MIT-lightgray.svg)](https://opensource.org/licenses/MIT)
 
 <p align="left">
@@ -15,7 +15,7 @@ Store persistent data or file in **UserDefaults**, **Keychain**, **File System**
 
 > *These types include Standard library types like String, Int; and Foundation types like Date, Data, URL etc.*
 > <br>
-> *That values can store as **.html**, **.json**, **.txt**, **.jpg**, **.png**, **.mov** and **.mp4** types in the file system.*
+> *That datas can store as **.html**, **.json**, **.txt**, **.jpg**, **.png**, **.mov** and **.mp4** types in the file system.*
 
 ## Contents
 
@@ -75,103 +75,128 @@ let package = Package(
 ## Usage
 
 ### UserDefaults
-- Save value
+- Save data
 ```swift
-try OYStore.save(to: .userDefaults(key: "ud_string_value_key"), value: "ud_string_value")
+try OYStore.save(to: .userDefaults(key: "ud_string_data_key"), data: "ud_string_data")
 ```
 ```swift
-try OYStore.save(to: .userDefaults(key: "ud_codable_value_key"), value: User())
+try OYStore.save(to: .userDefaults(key: "ud_codable_data_key"), data: User())
 ```
 ```swift
-try OYStore.save(to: .userDefaults(key: "ud_uiimage_value_key"), value: UIImage(named: "Sample")?.pngData())
-```
-
-- Fetch value
-```swift
-let value: User = try OYStore.value(of: .userDefaults(key: "ud_codable_value_key"))
+try OYStore.save(to: .userDefaults(key: "ud_uiimage_data_key"), data: UIImage(named: "Sample")?.pngData())
 ```
 
-- Fetch value with default
+- Fetch data
 ```swift
-OYStore.value(of: .userDefaults(key: "ud_string_value_key"), default: "ud_default_value")
+let data: User = try OYStore.data(of: .userDefaults(key: "ud_codable_data_key"))
 ```
 
-- Remove value
+- Fetch data with default
 ```swift
-try OYStore.remove(of: .userDefaults(key: "ud_uiimage_value_key"))
+OYStore.data(of: .userDefaults(key: "ud_string_data_key"), default: "ud_default_data")
 ```
 
-- Remove all value
+- Remove data
+```swift
+try OYStore.remove(of: .userDefaults(key: "ud_uiimage_data_key"))
+```
+
+- Remove all data
 ```swift
 try OYStore.removeAll(of: .userDefaults)
 ```
 
+- Is data exist?
+```swift
+try OYStore.isExist(at: .userDefaults(key: "ud_codable_data_key"))
+```
+
+- Move data
+`--UserDefaults doesn't support data move`
+
 ### Keychain
-- Save value
+- Save data
 ```swift
-try OYStore.save(to: .keychain(key: "kc_string_value_key"), value: "kc_string_value")
+try OYStore.save(to: .keychain(key: "kc_string_data_key"), data: "kc_string_data")
 ```
 ```swift
-try OYStore.save(to: .keychain(key: "kc_codable_value_key"), value: User())
+try OYStore.save(to: .keychain(key: "kc_codable_data_key"), data: User())
 ```
 ```swift
-try OYStore.save(to: .keychain(key: "kc_uiimage_value_key"), value: UIImage(named: "Sample")?.pngData())
-```
-
-- Fetch value
-```swift
-let value: User = try OYStore.value(of: .keychain(key: "kc_codable_value_key"))
+try OYStore.save(to: .keychain(key: "kc_uiimage_data_key"), data: UIImage(named: "Sample")?.pngData())
 ```
 
-- Fetch value with default
+- Fetch data
 ```swift
-OYStore.value(of: .keychain(key: "kc_string_value_key"), default: "kc_default_value")
+let data: User = try OYStore.data(of: .keychain(key: "kc_codable_data_key"))
 ```
 
-- Remove value
+- Fetch data with default
 ```swift
-try OYStore.remove(of: .keychain(key: "kc_uiimage_value_key"))
+OYStore.data(of: .keychain(key: "kc_string_data_key"), default: "kc_default_data")
 ```
 
-- Remove all value
+- Remove data
+```swift
+try OYStore.remove(of: .keychain(key: "kc_uiimage_data_key"))
+```
+
+- Remove all data
 ```swift
 try OYStore.removeAll(of: .keychain)
 ```
 
+- Is data exist?
+```swift
+try OYStore.isExist(at: .keychain(key: "kc_codable_data_key"))
+```
+
+- Move data
+`--Keychain doesn't support data move`
+
 ### Memory Cache
-> Backed by NSCache for store values on Memory.
+> Backed by NSCache for store datas on Memory.
 > <br>
 
-- Save value
+- Save data
 ```swift
-try OYStore.save(to: .memoryCache(key: "mc_string_value_key"), value: "mc_string_value")
+try OYStore.save(to: .memoryCache(key: "mc_string_data_key"), data: "mc_string_data")
 ```
 ```swift
-try OYStore.save(to: .memoryCache(key: "mc_codable_value_key"), value: User())
+try OYStore.save(to: .memoryCache(key: "mc_codable_data_key"), data: User())
 ```
 ```swift
-try OYStore.save(to: .memoryCache(key: "mc_uiimage_value_key"), value: UIImage(named: "Sample")?.pngData())
-```
-
-- Fetch value
-```swift
-let value: User = try OYStore.value(of: .memoryCache(key: "mc_codable_value_key"))
+try OYStore.save(to: .memoryCache(key: "mc_uiimage_data_key"), data: UIImage(named: "Sample")?.pngData())
 ```
 
-- Fetch value with default
+- Fetch data
 ```swift
-OYStore.value(of: .memoryCache(key: "mc_string_value_key"), default: "mc_default_value")
+let data: User = try OYStore.data(of: .memoryCache(key: "mc_codable_data_key"))
 ```
 
-- Remove value
+- Fetch data with default
 ```swift
-try OYStore.remove(of: .memoryCache(key: "mc_uiimage_value_key"))
+OYStore.data(of: .memoryCache(key: "mc_string_data_key"), default: "mc_default_data")
 ```
 
-- Remove all value
+- Remove data
+```swift
+try OYStore.remove(of: .memoryCache(key: "mc_uiimage_data_key"))
+```
+
+- Remove all data
 ```swift
 try OYStore.removeAll(of: .memoryCache)
 ```
+
+- Is data exist?
+```swift
+try OYStore.isExist(at: .memoryCache(key: "mc_codable_data_key"))
+```
+
+- Move data
+`--Memory Cache doesn't support data move`
+
 ### URL Cache
 > Cache for <code>URLRequest</code>
 
@@ -187,7 +212,7 @@ session.dataTask(with: request) { data, response, error in
 - Fetch cached response
 ```swift
 let request = URLRequest(url: URL(string: "API_URL")!)
-let value: User = try OYStore.value(of: .urlCache(urlRequest: request))
+let data: User = try OYStore.data(of: .urlCache(urlRequest: request))
 ```
 
 - Remove cached response
@@ -201,44 +226,62 @@ OYStore.remove(of: .urlCache(urlRequest: request))
 try? OYStore.removeAll(of: .urlCache)
 ```
 
+- Is data exist?
+```swift
+try OYStore.isExist(at: .urlCache(key: "mc_codable_data_key"))
+```
+
+- Move data
+`--URL Cache doesn't support data move`
+
 ### Disk Cache
 > <code>Library/Caches</code> Directory
 
 > Note that the system may delete the <code>Caches</code> directory to free up disk space, so your app must be able to re-create or download these files as needed.
 
-- Save value
+- Save data
 ```swift
-try OYStore.save(to: .diskCache(file: "dc_text_file", type: .txt), value: "dc_text_value")
+try OYStore.save(to: .diskCache(file: "dc_text_file", type: .txt), data: "dc_text_data")
 ```
 ```swift
-try OYStore.save(to: .diskCache(file: "dc_html_file", type: .html), value: "dc_html_value")
+try OYStore.save(to: .diskCache(file: "dc_html_file", type: .html), data: "dc_html_data")
 ```
 ```swift
-try OYStore.save(to: .diskCache(file: "dc_image", type: .png), value: UIImage(named: "Sample")?.pngData())
+try OYStore.save(to: .diskCache(file: "dc_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
-... save value with Folder...
+... save data with Folder...
 ```swift
-try OYStore.save(to: .diskCache(file: "dc_parent_folder/dc_image", type: .png), value: UIImage(named: "Sample")?.pngData())
-```
-
-- Fetch value
-```swift
-let value: String = try OYStore.value(of: .diskCache(file: "dc_text_file", type: .txt))
+try OYStore.save(to: .diskCache(file: "dc_parent_folder/dc_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
 
-- Fetch value with default
+- Fetch data
 ```swift
-OYStore.value(of: .diskCache(file: "dc_text_file", type: .txt), default: "dc_default_value")
+let data: String = try OYStore.data(of: .diskCache(file: "dc_text_file", type: .txt))
 ```
 
-- Remove value
+- Fetch data with default
 ```swift
-try OYStore.remove(of: .diskCache(key: "dc_uiimage_value_key"))
+OYStore.data(of: .diskCache(file: "dc_text_file", type: .txt), default: "dc_default_data")
 ```
 
-- Remove all value
+- Remove data
+```swift
+try OYStore.remove(of: .diskCache(key: "dc_uiimage_data_key"))
+```
+
+- Remove all data
 ```swift
 try OYStore.removeAll(of: .diskCache)
+```
+
+- Is data exist?
+```swift
+try OYStore.isExist(at: .diskCache(key: "mc_codable_data_key"))
+```
+
+- Move data
+```swift
+try OYStore.move(from: .diskCache(file: "ds_text_file", type: .txt), to: .documents(file: "d_parent_folder/as_text_file", type: .txt))
 ```
 
 ### Application Support
@@ -246,39 +289,49 @@ try OYStore.removeAll(of: .diskCache)
 
 > Store files in here that are required for your app but should never be visible to the user like your app’s database file. You can store files in here at the top level or create sub-directories. Content of the directory is persisted and included in the iCloud and iTunes backups.
 
-- Save value
+- Save data
 ```swift
-try OYStore.save(to: .applicationSupport(file: "as_text_file", type: .txt), value: "as_text_value")
+try OYStore.save(to: .applicationSupport(file: "as_text_file", type: .txt), data: "as_text_data")
 ```
 ```swift
-try OYStore.save(to: .applicationSupport(file: "as_html_file", type: .html), value: "as_html_value")
+try OYStore.save(to: .applicationSupport(file: "as_html_file", type: .html), data: "as_html_data")
 ```
 ```swift
-try OYStore.save(to: .applicationSupport(file: "as_image", type: .png), value: UIImage(named: "Sample")?.pngData())
+try OYStore.save(to: .applicationSupport(file: "as_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
-... save value with Folder...
+... save data with Folder...
 ```swift
-try OYStore.save(to: .applicationSupport(file: "as_parent_folder/as_image", type: .png), value: UIImage(named: "Sample")?.pngData())
-```
-
-- Fetch value
-```swift
-let value: String = try OYStore.value(of: .applicationSupport(file: "as_text_file", type: .txt))
+try OYStore.save(to: .applicationSupport(file: "as_parent_folder/as_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
 
-- Fetch value with default
+- Fetch data
 ```swift
-OYStore.value(of: .applicationSupport(file: "as_text_file", type: .txt), default: "as_default_value")
+let data: String = try OYStore.data(of: .applicationSupport(file: "as_text_file", type: .txt))
 ```
 
-- Remove value
+- Fetch data with default
 ```swift
-try OYStore.remove(of: .applicationSupport(key: "as_uiimage_value_key"))
+OYStore.data(of: .applicationSupport(file: "as_text_file", type: .txt), default: "as_default_data")
 ```
 
-- Remove all value
+- Remove data
+```swift
+try OYStore.remove(of: .applicationSupport(key: "as_uiimage_data_key"))
+```
+
+- Remove all data
 ```swift
 try OYStore.removeAll(of: .applicationSupport)
+```
+
+- Is data exist?
+```swift
+try OYStore.isExist(at: .applicationSupport(file: "as_text_file", type: .txt))
+```
+
+- Move data
+```swift
+try OYStore.move(from: .applicationSupport(file: "as_text_file", type: .txt), to: .documents(file: "d_parent_folder/d_text_file", type: .txt))
 ```
 
 ### Documents
@@ -286,39 +339,49 @@ try OYStore.removeAll(of: .applicationSupport)
 
 > Documents and other data that is user-generated and stored in the <code>Documents</code> directory can be automatically backed up by iCloud on iOS devices, if the iCloud Backup setting is turned on. The data can be recovered when user sets up a new device or resets an existing device.
 
-- Save value
+- Save data
 ```swift
-try OYStore.save(to: .documents(file: "d_text_file", type: .txt), value: "d_text_value")
+try OYStore.save(to: .documents(file: "d_text_file", type: .txt), data: "d_text_data")
 ```
 ```swift
-try OYStore.save(to: .documents(file: "d_html_file", type: .html), value: "d_html_value")
+try OYStore.save(to: .documents(file: "d_html_file", type: .html), data: "d_html_data")
 ```
 ```swift
-try OYStore.save(to: .documents(file: "d_image", type: .png), value: UIImage(named: "Sample")?.pngData())
+try OYStore.save(to: .documents(file: "d_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
-... save value with Folder...
+... save data with Folder...
 ```swift
-try OYStore.save(to: .documents(file: "d_parent_folder/d_image", type: .png), value: UIImage(named: "Sample")?.pngData())
-```
-
-- Fetch value
-```swift
-let value: String = try OYStore.value(of: .documents(file: "d_text_file", type: .txt))
+try OYStore.save(to: .documents(file: "d_parent_folder/d_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
 
-- Fetch value with default
+- Fetch data
 ```swift
-OYStore.value(of: .documents(file: "d_text_file", type: .txt), default: "d_default_value")
+let data: String = try OYStore.data(of: .documents(file: "d_text_file", type: .txt))
 ```
 
-- Remove value
+- Fetch data with default
 ```swift
-try OYStore.remove(of: .documents(key: "d_uiimage_value_key"))
+OYStore.data(of: .documents(file: "d_text_file", type: .txt), default: "d_default_data")
 ```
 
-- Remove all value
+- Remove data
+```swift
+try OYStore.remove(of: .documents(key: "d_uiimage_data_key"))
+```
+
+- Remove all data
 ```swift
 try OYStore.removeAll(of: .documents)
+```
+
+- Is data exist?
+```swift
+try OYStore.isExist(at: .documents(file: "d_text_file", type: .txt))
+```
+
+- Move data
+```swift
+try OYStore.move(from: .documents(file: "d_text_file", type: .txt), to: .applicationSupport(file: "as_parent_folder/as_text_file", type: .txt))
 ```
 
 ### Temporary
@@ -326,39 +389,49 @@ try OYStore.removeAll(of: .documents)
 
 > Data that is used only temporarily should be stored in the <code>tmp</code> directory. Although these files are not backed up to iCloud, remember to delete those files when you are done with them so that they do not continue to consume space on the user’s device.
 
-- Save value
+- Save data
 ```swift
-try OYStore.save(to: .temporary(file: "tmp_text_file", type: .txt), value: "tmp_text_value")
+try OYStore.save(to: .temporary(file: "tmp_text_file", type: .txt), data: "tmp_text_data")
 ```
 ```swift
-try OYStore.save(to: .temporary(file: "tmp_html_file", type: .html), value: "tmp_html_value")
+try OYStore.save(to: .temporary(file: "tmp_html_file", type: .html), data: "tmp_html_data")
 ```
 ```swift
-try OYStore.save(to: .temporary(file: "tmp_image", type: .png), value: UIImage(named: "Sample")?.pngData())
+try OYStore.save(to: .temporary(file: "tmp_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
-... save value with Folder...
+... save data with Folder...
 ```swift
-try OYStore.save(to: .temporary(file: "d_parent_folder/tmp_image", type: .png), value: UIImage(named: "Sample")?.pngData())
-```
-
-- Fetch value
-```swift
-let value: String = try OYStore.value(of: .temporary(file: "tmp_text_file", type: .txt))
+try OYStore.save(to: .temporary(file: "tmp_parent_folder/tmp_image", type: .png), data: UIImage(named: "Sample")?.pngData())
 ```
 
-- Fetch value with default
+- Fetch data
 ```swift
-OYStore.value(of: .temporary(file: "tmp_text_file", type: .txt), default: "tmp_default_value")
+let data: String = try OYStore.data(of: .temporary(file: "tmp_text_file", type: .txt))
 ```
 
-- Remove value
+- Fetch data with default
 ```swift
-try OYStore.remove(of: .temporary(key: "tmp_uiimage_value_key"))
+OYStore.data(of: .temporary(file: "tmp_text_file", type: .txt), default: "tmp_default_data")
 ```
 
-- Remove all value
+- Remove data
+```swift
+try OYStore.remove(of: .temporary(key: "tmp_uiimage_data_key"))
+```
+
+- Remove all data
 ```swift
 try OYStore.removeAll(of: .temporary)
+```
+
+- Is data exist?
+```swift
+try OYStore.isExist(at: .temporary(file: "tmp_text_file", type: .txt))
+```
+
+- Move data
+```swift
+try OYStore.move(from: .temporary(file: "tmp_text_file", type: .txt), to: .applicationSupport(file: "as_parent_folder/as_text_file", type: .txt))
 ```
 
 ## License
