@@ -1,8 +1,8 @@
 [![Cocoapods](https://img.shields.io/cocoapods/v/OYStore.svg)](https://cocoapods.org/pods/OYStore)
 [![SPM compatible](https://img.shields.io/badge/SPM-Compatible-red.svg?style=flat)](https://swift.org/package-manager/)
 [![Platforms](https://img.shields.io/badge/platforms-iOS-yellow.svg)](https://github.com/osmanyildirim/OYStore)
-[![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
-[![Xcode](https://img.shields.io/badge/Xcode-16.0-blue.svg)](https://developer.apple.com/xcode)
+[![Swift](https://img.shields.io/badge/Swift-5.7-orange.svg)](https://swift.org)
+[![Xcode](https://img.shields.io/badge/Xcode-15.4-blue.svg)](https://developer.apple.com/xcode)
 [![MIT](https://img.shields.io/badge/License-MIT-lightgray.svg)](https://opensource.org/licenses/MIT)
 
 <p align="left">
@@ -35,7 +35,7 @@ Store persistent data or file in **UserDefaults**, **Keychain**, **File System**
 ## Requirements
 
 * iOS 11.0+
-* Swift 5.0+
+* Swift 5.7+
 
 ## Installation
 
